@@ -1,0 +1,17 @@
+<% provide(:title, @user.name) %>
+<h1 class="center">ユーザー情報</h1>
+<div class="row">
+  <aside class="col-md-4">
+    <section>
+      <h2>
+        <%= @user.name %>さん
+      </h2>
+      <h2>
+        メールアドレス
+        <%= @user.email%>
+      </h2>
+      <%= link_to "変更する", edit_user_registration_path, class: "btn btn-lg btn-primary"%>
+      <%= link_to "ホームに戻る", root_path%>
+    </section>
+  </aside>
+</div>
