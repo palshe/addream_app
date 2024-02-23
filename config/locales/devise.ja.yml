@@ -1,0 +1,21 @@
+ja:
+  devise:
+    failure:
+      invalid: "メールアドレスまたはパスワードが正しくありません"
+      not_found_in_database: '%{authentication_keys}またはパスワードが正しくありません'
+    sessions:
+      signed_in: "ログインに成功しました"
+      signed_out: "ログアウトしました"
+    password:
+      updated: "パスワードの更新が完了しました"
+    registrations:
+      updated: "アカウントの更新が完了しました"
+      user:
+        signed_up: "アカウント登録が完了しました"
+      signed_up: "アカウント登録が完了しました"
+  errors:
+    messages:
+      not_found: "見つかりません"
+      not_saved:
+        one: 1件のエラーが発生したため %{resource} は保存されませんでした
+        other: '%{count} 件のエラーが発生したため %{resource} は保存されませんでした'
