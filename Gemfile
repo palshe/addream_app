@@ -4,6 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.2.3"
 
 gem "rails",           "7.0.4.3"
+gem 'show_me_the_cookies'
 gem 'rails-i18n'
 gem 'devise-i18n-views'
 gem "bootstrap-sass",  "3.4.1"

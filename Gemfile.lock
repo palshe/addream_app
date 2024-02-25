@@ -311,6 +311,8 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     shellany (0.0.1)
+    show_me_the_cookies (6.0.0)
+      capybara (>= 2, < 4)
     solargraph (0.50.0)
       backport (~> 1.2)
       benchmark
@@ -399,6 +401,7 @@ DEPENDENCIES
   rspec-rails
   sassc-rails (= 2.1.2)
   selenium-webdriver (= 4.8.3)
+  show_me_the_cookies
   solargraph (= 0.50.0)
   sprockets-rails (= 3.4.2)
   sqlite3 (= 1.6.1)
