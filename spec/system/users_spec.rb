@@ -99,10 +99,6 @@ RSpec.describe "Users", type: :system do
       expect(current_path).to eq root_path
       expect(page).to have_content "ログインに成功しました"
     end
-    it "正しい情報を入力したらログインできるか" do
-      click_button '送信'
-      
-    end
     it "emailがないと422とエラーメッセージ" do
       fill_in 'user[email]', with: ""
       click_button '送信'
@@ -129,12 +125,122 @@ RSpec.describe "Users", type: :system do
   end
 
   describe "ユーザーページ" do
+    let! (:user) { create(:user) }
+    before do
+      sign_in(user)
+      visit users_show_path
+    end
+    it "正しく表示されているか" do
+      expect(page.status_code).to eq(200)
+    end
+    it "編集ページへのリンクをもっているか" do
+      expect(page).to have_link '変更する', href: edit_user_registration_path
+    end
+    it "ホームへのリンクをもっているか" do
+      expect(page).to have_link 'ホームに戻る', href: root_path
+    end
+    it "名前が表示されているか" do
+      expect(page).to have_content user.name
+    end
+    it "idが表示されているか" do
+      expect(page).to have_content user.id
+    end
+    it "名前が表示されているか" do
+      expect(page).to have_content user.email
+    end
   end
 
   describe "編集" do
+    let! (:user)  { create(:user) }
+    before do
+      sign_in(user)
+      visit edit_user_registration_path
+      fill_in 'user[name]', with: 'test_user'
+      fill_in 'user[email]', with: 'update-example@example.com'
+      fill_in 'user[password]', with: '222222'
+      fill_in 'user[password_confirmation]', with: '222222'
+    end
+    it "正しく表示されているか" do
+      expect(page.status_code).to eq(200)
+      expect(page).to have_content "編集"
+    end
+    it "name入力フォームをもっているか" do
+      expect(page).to have_field 'user[name]'
+    end
+    it "email入力フォームをもっているか" do
+      expect(page).to have_field 'user[email]'
+    end
+    it "password入力フォームをもっているか" do
+      expect(page).to have_field 'user[password]'
+    end
+    it "password_confirmation入力フォームをもっているか" do
+      expect(page).to have_field 'user[password_confirmation]'
+    end
+    it "ユーザーページへのリンクをもっているか" do
+      expect(page).to have_link 'ユーザーページへ戻る', href: users_show_path
+    end
+    it "送信ボタンがあるか" do
+      expect(page).to have_button '送信'
+    end
+    it "正しい情報を入力したらユーザーページへリダイレクトしフラッシュメッセージが表示される" do
+      click_button '送信'
+      expect(current_path).to eq users_show_path
+      expect(page).to have_content "アカウント情報の更新が完了しました"
+    end
+    it "passwordがなくても通る" do
+      fill_in 'user[password]', with: ""
+      fill_in 'user[password_confirmation]', with: ""
+      click_button '送信'
+      expect(current_path).to eq users_show_path
+      expect(page).to have_content "アカウント情報の更新が完了しました"
+    end
+    it "emailがないと422とエラーメッセージ" do
+      fill_in 'user[email]', with: ""
+      click_button '送信'
+      expect(page).to have_http_status(422)
+      expect(page).to have_content "メールアドレスを入力してください"
+    end
+    it "passwordはなしでpassword_confirmationはあり" do
+      fill_in 'user[password_confirmation]', with: ""
+      click_button '送信'
+      expect(page).to have_http_status(422)
+      expect(page).to have_content "確認用パスワードとパスワードの入力が一致しません"
+    end
+    it "passwordはなしでpassword_confirmationはあり" do
+      fill_in 'user[password]', with: ""
+      click_button '送信'
+      expect(page).to have_http_status(422)
+      expect(page).to have_content "確認用パスワードとパスワードの入力が一致しません"
+    end
+    it "nameを未入力だと表示されなくなる" do
+      fill_in 'user[name]', with: ""
+      click_button '送信'
+      expect(current_path).to eq users_show_path
+      expect(page).to_not have_content "#{user.name}さん"
+    end
   end
 
   describe "ログアウト" do
+    let! (:user) { create(:user) }
+    it "ホームに戻ってフラッシュメーセージが表示される" do
+      sign_in(user)
+      visit users_show_path
+      click_link "ログアウト"
+      expect(current_path).to eq root_path
+      expect(page).to have_content "ログアウトしました"
+      expect(page).to have_link "ログイン", href: new_user_session_path
+      expect(page).to have_link "新規登録", href: new_user_registration_path
+    end
+    it "cookieが消える" do
+      visit new_user_session_path
+      fill_in 'user[email]', with: 'example@example.com'
+      fill_in 'user[password]', with: '111111'
+      check "rspec_check_box"
+      click_button "送信"
+      expect(get_me_the_cookie('remember_user_token')).to be_present
+      visit users_show_path
+      click_link "ログアウト"
+      expect(get_me_the_cookie('remember_user_token')[:value]).to be_blank
+    end
   end
-
 end

@@ -2,6 +2,7 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
+  #before_action :authenticate_user!, only: [:edit, :update]
 
   # GET /resource/sign_up
   # def new

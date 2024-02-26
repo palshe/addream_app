@@ -9,7 +9,7 @@ ja:
     password:
       updated: "パスワードの更新が完了しました"
     registrations:
-      updated: "アカウントの更新が完了しました"
+      updated: "アカウント情報の更新が完了しました"
       user:
         signed_up: "アカウント登録が完了しました"
       signed_up: "アカウント登録が完了しました"

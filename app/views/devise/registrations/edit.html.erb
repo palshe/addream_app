@@ -1,4 +1,4 @@
-<h2>設定</h2>
+<h2>編集</h2>
 <%= form_with model: @user, url: user_registration_path, local: true do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
@@ -33,4 +33,4 @@
     <%= f.submit "送信" %>
   </div>
 <% end %>
-<%= link_to "ユーザーページへ戻る", :back %>
+<%= link_to "ユーザーページへ戻る", users_show_path %>
