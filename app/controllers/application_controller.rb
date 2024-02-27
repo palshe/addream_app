@@ -6,6 +6,10 @@ class ApplicationController < ActionController::Base
     root_path
   end
 
+  def after_sending_reset_password_instructions_path_for(resource_name)
+    users_passwordreset_path
+  end
+
   protected
 
   def configure_permitted_parameters

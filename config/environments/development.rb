@@ -42,6 +42,10 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  # 開発環境でメールを送るためのホストの設定（rails tutorial 11）
+  host = 'psychic-funicular-v66qqg5wrrqpfxqpw-3000.app.github.dev'
+  config.action_mailer.default_url_options = { host: host, protocol: 'https' }
+
   config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.

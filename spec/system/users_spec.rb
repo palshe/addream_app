@@ -37,6 +37,12 @@ RSpec.describe "Users", type: :system do
       click_button '送信'
       expect(current_path).to eq root_path
     end
+    it "emailが大文字でも小文字に変換される" do
+      fill_in 'user[email]', with: "TEST@TEST.COM"
+      click_button '送信'
+      expect(current_path).to eq root_path
+      expect(user.email).to eq 'test@test.com'
+    end
     it "emailがないと422とエラーメッセージ" do
       fill_in 'user[email]', with: ""
       click_button '送信'
