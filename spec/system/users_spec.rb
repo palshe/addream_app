@@ -37,12 +37,6 @@ RSpec.describe "Users", type: :system do
       click_button '送信'
       expect(current_path).to eq root_path
     end
-    it "emailが大文字でも小文字に変換される" do
-      fill_in 'user[email]', with: "TEST@TEST.COM"
-      click_button '送信'
-      expect(current_path).to eq root_path
-      expect(user.email).to eq 'test@test.com'
-    end
     it "emailがないと422とエラーメッセージ" do
       fill_in 'user[email]', with: ""
       click_button '送信'
@@ -192,6 +186,9 @@ RSpec.describe "Users", type: :system do
       click_button '送信'
       expect(current_path).to eq users_show_path
       expect(page).to have_content "アカウント情報の更新が完了しました"
+      user.reload
+      expect(user.name).to eq "test_user"
+      expect(user.email).to eq "update-example@example.com"
     end
     it "passwordがなくても通る" do
       fill_in 'user[password]', with: ""
@@ -206,6 +203,12 @@ RSpec.describe "Users", type: :system do
       expect(page).to have_http_status(422)
       expect(page).to have_content "メールアドレスを入力してください"
     end
+    it "emailが大文字でも小文字に変換される" do
+      fill_in 'user[email]', with: "TEST@TEST.COM"
+      click_button '送信'
+      user.reload
+      expect(user.email).to eq 'test@test.com'
+    end
     it "passwordはなしでpassword_confirmationはあり" do
       fill_in 'user[password_confirmation]', with: ""
       click_button '送信'
@@ -217,6 +220,17 @@ RSpec.describe "Users", type: :system do
       click_button '送信'
       expect(page).to have_http_status(422)
       expect(page).to have_content "確認用パスワードとパスワードの入力が一致しません"
+    end
+    it "passwordを変更したら変更後のパスワードでログインできる" do
+      click_button '送信'
+      user.reload
+      click_link 'ログアウト'
+      visit new_user_session_path
+      fill_in 'user[email]', with: "update-example@example.com"
+      fill_in 'user[password]', with: "222222"
+      click_button '送信'
+      expect(page).to have_content "ログインに成功しました"
+      expect(current_path).to eq root_path
     end
     it "nameを未入力だと表示されなくなる" do
       fill_in 'user[name]', with: ""
@@ -247,6 +261,36 @@ RSpec.describe "Users", type: :system do
       visit users_show_path
       click_link "ログアウト"
       expect(get_me_the_cookie('remember_user_token')[:value]).to be_blank
+    end
+  end
+
+  describe "パスワードリセット" do
+    include EmailSpec::Helpers
+    include EmailSpec::Matchers
+    let! (:user) { create(:user) }
+    before do
+      visit new_user_password_path
+      fill_in 'user[email]', with: user.email
+    end
+    it "正しく表示されているか" do
+      expect(page.status_code).to eq(200)
+    end
+    it "email入力フォームをもっているか" do
+      expect(page).to have_field 'user[email]'
+    end
+    it "本人確認メールを送信するボタンを持っているか" do
+      expect(page).to have_button "本人確認メールを送信する"
+    end
+    it "メールアドレスが有効ではない場合エラーメッセージを出力するか" do
+      fill_in 'user[email]', with: ""
+      click_button "本人確認メールを送信する"
+      expect(page).to have_http_status(422)
+      #expect(page).to have_content ""
+    end
+    it "本人確認メールを送信するを押すと送信完了画面に移動する" do
+      click_button "本人確認メールを送信する"
+      expect(current_path).to eq users_passwordreset_path
+      expect(page).to have_content "パスワードリセット用のメールを送信しました。"
     end
   end
 end

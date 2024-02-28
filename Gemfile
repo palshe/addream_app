@@ -41,6 +41,8 @@ group :test do
   gem "rspec-rails"
   gem "factory_bot_rails"
   gem "faker"
+  gem "capybara-email"
+  gem "email_spec"
 end
 
 group :production do
