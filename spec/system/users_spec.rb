@@ -265,8 +265,8 @@ RSpec.describe "Users", type: :system do
   end
 
   describe "パスワードリセット" do
-    include EmailSpec::Helpers
-    include EmailSpec::Matchers
+    #include EmailSpec::Helpers
+    #include EmailSpec::Matchers
     let! (:user) { create(:user) }
     before do
       visit new_user_password_path
@@ -291,6 +291,21 @@ RSpec.describe "Users", type: :system do
       click_button "本人確認メールを送信する"
       expect(current_path).to eq users_passwordreset_path
       expect(page).to have_content "パスワードリセット用のメールを送信しました。"
+    end
+    describe "メール送信" do
+      before do
+        clear_emails
+        click_button '本人確認メールを送信する'
+        open_email(user.email)
+      end
+      it "パスワード編集ページに飛んでいるか" do
+        current_email.click_link 'change my password!'
+        expect(current_path).to eq "/users/password/edit.#{user.id}"
+      end
+      it "emailの内容は正しいか" do
+        expect(current_email).to have_content "Hi! #{user.email}"
+        expect(current_email).to have_link "change my password!"
+      end
     end
   end
 end
