@@ -298,13 +298,37 @@ RSpec.describe "Users", type: :system do
         click_button '本人確認メールを送信する'
         open_email(user.email)
       end
-      it "パスワード編集ページに飛んでいるか" do
+      it "パスワード編集ページに飛び、ページの中身はただしいか" do
         current_email.click_link 'change my password!'
         expect(current_path).to eq "/users/password/edit.#{user.id}"
+        expect(page).to have_field 'user[password]'
+        expect(page).to have_field 'user[password_confirmation]'
+      end
+      it "無効なパスワード" do
+        current_email.click_link 'change my password!'
+        fill_in 'user[password]', with: "222"
+        fill_in 'user[password_confirmation]', with: ""
+        click_button '送信'
+        expect(page).to have_content '確認用パスワードとパスワードの入力が一致しません'
+        expect(page).to have_content 'パスワードは6文字以上で入力してください'
       end
       it "emailの内容は正しいか" do
         expect(current_email).to have_content "Hi! #{user.email}"
         expect(current_email).to have_link "change my password!"
+      end
+      it "パスワード変更後にトークンの有効期限は切れているか" do
+        current_email.click_link 'change my password!'
+        path = current_url
+        fill_in 'user[password]', with: "111111"
+        fill_in 'user[password_confirmation]', with: "111111"
+        click_button '送信'
+        expect(current_path).to eq root_path
+        click_link 'ログアウト'
+        visit path
+        fill_in 'user[password]', with: "111111"
+        fill_in 'user[password_confirmation]', with: "111111"
+        click_button '送信'
+        expect(page).to have_http_status(422)
       end
     end
   end
