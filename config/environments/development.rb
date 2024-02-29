@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require 'twilio-ruby'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -85,4 +86,10 @@ Rails.application.configure do
   config.hosts << pf_host
 
   config.action_cable.allowed_request_origins = ["https://#{pf_host}"]
+
+  # 開発環境のtwilioの設定作り終わったら絶対消すように！
+  Twilio.configure do |config|
+    #config.account_sid = 
+    #config.auth_token = 
+  end
 end
