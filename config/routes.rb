@@ -5,4 +5,8 @@ Rails.application.routes.draw do
   get '/users/passwordreset', to: 'static_pages#passwordreset'
   get '/about', to: 'static_pages#about'
   get '/help' , to: 'static_pages#help'
+  resources :account_activations, only: [:edit]
+  devise_scope :user do
+    get '/users', to: 'static_pages#home'
+  end
 end
