@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   validates :phone, presence: true, uniqueness: true
-  attr_accessor :activation_token
-  before_create :create_activation_digest
+  #attr_accessor :activation_token
+  #before_create :create_activation_digest
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -20,13 +20,17 @@ class User < ApplicationRecord
     end
   end
 
-  def authenticated?(token)
+  def activation_authenticate(token)
     return false if activation_digest.nil?
     BCrypt::Password.new(activation_digest).is_password?(token)
   end
 
   def activate
-    update_columns(activated: true, activated_at: Time.zone.now)
+    update_columns(activation_digest: nil, activated: true, activated_at: Time.now)
+  end
+
+  def activation_digest_expired?
+    activation_sms_sent_at < 30.hours.ago
   end
 
   def update_without_current_password(params, *options)

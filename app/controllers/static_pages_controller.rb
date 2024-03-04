@@ -1,4 +1,5 @@
 class StaticPagesController < ApplicationController
+  before_action :authenticate_user!, only: [:activation]
   def home
   end
 
@@ -9,6 +10,9 @@ class StaticPagesController < ApplicationController
   end
 
   def passwordreset
+  end
+
+  def activation
   end
 
 end

@@ -23,6 +23,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_29_091145) do
     t.string "activation_digest"
     t.boolean "activated", default: false
     t.datetime "activated_at"
+    t.datetime "activation_sms_sent_at"
     t.string "phone", default: "", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true

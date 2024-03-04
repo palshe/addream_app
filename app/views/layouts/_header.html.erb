@@ -7,7 +7,7 @@
         <% if user_signed_in? %>
         <li><%= link_to "ログアウト", destroy_user_session_path, data:{"turbo-method": :delete}, method: :delete %></li>
           <% if !current_user.activated %>
-            <li><%= link_to "有効化する", "#" %></li>
+            <li><%= link_to "有効化する", users_activation_path %></li>
           <% end %>
         <% end %>
       </ul>

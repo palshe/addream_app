@@ -1,0 +1,7 @@
+<%= provide(:title, "携帯番号の検証") %>
+<%= form_with(url: account_activation_path, scope: :account_activation, method: :patch, local: true) do |f| %>
+  <%= f.label :activation_number, "10ケタの数字" %>
+  <%= f.text_field :activation_number %>
+
+  <%= f.submit "送信", class: "btn btn-primary" %>
+<% end %>
