@@ -1,13 +1,18 @@
 class AccountActivationsController < ApplicationController
   before_action :authenticate_user!
+  before_action :activated_user
   include SmsSend
 
   def edit
     if @user = User.find(params[:id])
       @random_number = Twilio.random_number_generator(10)
       digest = User.digest(@random_number)
+      @message = Twilio.send_sms(@user.phone, @random_number)
+      if !@message.nil?
+        flash.now[:danger] = @message
+        #redirect_to users_activation_path
+      end
       @user.update_columns(activation_digest: digest, activation_sms_sent_at: Time.now)
-      #Twilio.send_sms(@user.phone, random_number)
       render 'edit'
     else
       flash[:danger] = "ログインしてください。"
@@ -35,6 +40,13 @@ class AccountActivationsController < ApplicationController
   def check_expiration
     if @user.activation_digest_expired?
       flash[:danger] = "コードの期限が切れています。もう一度お試しください。"
+      redirect_to users_activation_path
+    end
+  end
+
+  def activated_user
+    if current_user.activated
+      flash[:success] = "すでに有効化されています。"
       redirect_to users_activation_path
     end
   end

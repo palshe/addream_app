@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   require 'bcrypt'
-  validates :phone, presence: true, uniqueness: true
+  validates :phone, presence:true, uniqueness:true
   #attr_accessor :activation_token
   #before_create :create_activation_digest
   # Include default devise modules. Others available are:
@@ -31,7 +31,7 @@ class User < ApplicationRecord
   end
 
   def activation_digest_expired?
-    activation_sms_sent_at < 30.hours.ago
+    activation_sms_sent_at < 30.minutes.ago
   end
 
   def update_without_current_password(params, *options)

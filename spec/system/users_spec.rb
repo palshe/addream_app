@@ -7,6 +7,7 @@ RSpec.describe "Users", type: :system do
       visit new_user_registration_path
       fill_in 'user[name]', with: Faker::Lorem.characters(number: 10)
       fill_in 'user[email]', with: 'test@test.com'
+      fill_in 'user[phone]', with: '22222222222'
       fill_in 'user[password]', with: '111111'
       fill_in 'user[password_confirmation]', with: '111111'
     end
@@ -21,6 +22,9 @@ RSpec.describe "Users", type: :system do
     end
     it "password_confirmation入力フォームをもっているか" do
       expect(page).to have_field 'user[password_confirmation]'
+    end
+    it "phone入力フォームをもっているか" do
+      expect(page).to have_field 'user[phone]'
     end
     it "送信ボタンがあるか" do
       expect(page).to have_button '送信'
@@ -66,6 +70,16 @@ RSpec.describe "Users", type: :system do
       click_button '送信'
       expect(page).to have_http_status(422)
       expect(page).to have_content "確認用パスワードとパスワードの入力が一致しません"
+    end
+    it "phoneがnilのとき通らない" do
+      fill_in 'user[phone]', with: ""
+      click_button '送信'
+      expect(page).to have_http_status(422)
+    end
+    it "登録済みのphoneは通らない" do
+      fill_in 'user[phone]', with: "1111111111"
+      click_button '送信'
+      expect(page).to have_http_status(422)
     end
   end
 
@@ -145,7 +159,7 @@ RSpec.describe "Users", type: :system do
     it "idが表示されているか" do
       expect(page).to have_content user.id
     end
-    it "名前が表示されているか" do
+    it "メールアドレスが表示されているか" do
       expect(page).to have_content user.email
     end
   end
@@ -285,12 +299,12 @@ RSpec.describe "Users", type: :system do
       fill_in 'user[email]', with: ""
       click_button "本人確認メールを送信する"
       expect(page).to have_http_status(422)
-      #expect(page).to have_content ""
+      expect(page).to have_content "メールアドレスを入力してください"
     end
     it "本人確認メールを送信するを押すと送信完了画面に移動する" do
       click_button "本人確認メールを送信する"
       expect(current_path).to eq users_passwordreset_path
-      expect(page).to have_content "パスワードリセット用のメールを送信しました。"
+      expect(page).to have_content "パスワード再設定用のメールを送信しました。"
     end
     describe "メール送信" do
       before do
@@ -329,6 +343,74 @@ RSpec.describe "Users", type: :system do
         fill_in 'user[password_confirmation]', with: "111111"
         click_button '送信'
         expect(page).to have_http_status(422)
+      end
+    end
+  end
+
+  describe "電話番号の検証" do
+    let!(:user){ create(:user) }
+    before do
+      user.update_columns(activated: false)
+      user.reload
+      sign_in(user)
+      visit users_activation_path
+    end
+    it "正しく表示されているか" do
+      expect(page.status_code).to eq(200)
+    end
+    it "電話番号検証のリンクを持っているか" do
+      expect(page).to have_content "電話番号を検証"
+    end
+    context "電話番号が正しい場合" do
+      before do
+        click_link "電話番号を検証"
+        @random_number = instance_variable_get("@random_number")
+        @back = current_path
+      end
+      it "正しく表示されているか" do
+        expect(page.status_code).to eq(200)
+        expect(page).to have_content "10ケタの数字"
+      end
+      it "数字を入力するフォームはあるか" do
+        expect(page).to have_field "account_activation[activation_number]"
+      end
+      it "送信ボタンはあるか" do
+        expect(page).to have_button "送信"
+      end
+      it "正しい入力とその後に戻ろうとしても戻れない" do
+        fill_in 'account_activation[activation_number]', with: @random_number
+        p "#{@random_number}"
+        click_button "送信"
+        user.reload
+        expect(user.activated).to be_truthy
+        expect(current_path).to eq users_activation_path
+        expect(page).to_not have_link "電話番号を検証"
+        visit @back
+        expect(current_path).to eq users_activation_path
+        expect(page).to have_content "すでに有効化されています。"
+      end
+      it "間違った入力をしたあとも同じコードで有効化できる" do
+        fill_in 'account_activation[activation_number]', with: "1111111111"
+        click_button "送信"
+        expect(page).to have_content "コードが間違っています。"
+        fill_in 'account_activation[activation_number]', with: @random_number
+        click_button "送信"
+        user.reload
+        expect(user.activated).to be_truthy
+      end
+      it "時間切れ" do
+        user.update_columns(activation_sms_sent_at: 1.hours.ago)
+        user.reload
+        fill_in 'account_activation[activation_number]', with: @random_number
+        expect(current_path).to eq users_activation_path
+        expect(page).to have_content "コードの期限が切れています。"
+      end
+    end
+    context "電話番号が間違っている場合" do
+      it "エラーメッセージはあるか？" do
+        p user.activated.inspect
+        click_link "電話番号を検証"
+        expect(page).to have_content "SMSが正しく送信されませんでした。"
       end
     end
   end

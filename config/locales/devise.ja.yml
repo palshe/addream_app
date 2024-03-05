@@ -7,10 +7,10 @@ ja:
     failure:
       already_authenticated: "既にログインしています。"
       inactive: "あなたのアカウントはまだ有効化されていません。"
-      invalid: "Invalid %{authentication_keys} or password."
+      invalid: "%{authentication_keys}またはパスワードが正しくありません。"
       locked: "あなたのアカウントはロックされています。"
       last_attempt: "あと1度パスワードを間違えるとアカウントがロックされます。"
-      not_found_in_database: "Invalid %{authentication_keys} or password."
+      not_found_in_database: "%{authentication_keys}またはパスワードが正しくありません。"
       timeout: "セッションの有効期限が切れました。続行するには再度ログインしてください。"
       unauthenticated: "続行する前にログインまたは新規登録する必要があります。"
       unconfirmed: "続行する前にメールアドレスを確認する必要があります。"
@@ -30,7 +30,7 @@ ja:
       success: "Successfully authenticated from %{kind} account."
     passwords:
       no_token: "このページはパスワード再設定メールからアクセスした場合のみ有効です。このURLから手続きが行えない場合、URLの有効期限が切れている可能性があります。ログインページからもう一度手続きを行ってください。"
-      send_instructions: "パスワード再設定メールが送信されました。"
+      send_instructions: ""
       send_paranoid_instructions: "あなたのメールアドレスが当サービスに登録されている場合、このメールアドレス宛にパスワード復旧リンクが送信されました。"
       updated: "パスワードの変更が完了しました。ログインしました。"
       updated_not_active: "パスワードの変更が完了しました。"

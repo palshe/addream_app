@@ -15,10 +15,11 @@ module SmsSend
           client.api.account.messages.create(
             from: '', #ホントはENV['PHONE_NUMBER']
             to: formatted_number,
-            body: "認証URL: #{code}"
+            body: "認証コード: #{code}"
           )
+          @true
         rescue ::Twilio::REST::RestError => e
-          @message = "#{e.message}, アカウントを有効化できませんでした。電話番号をご確認の上、ヘッダーのリンクからアカウント有効化を行ってください。"
+          @message = "#{e.message}, SMSが正しく送信されませんでした。電話番号をご確認の上、ヘッダーのリンクから再度アカウント有効化を行ってください。"
 
         end
       end
