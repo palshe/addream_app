@@ -97,7 +97,7 @@ RSpec.describe "Users", type: :system do
     it "正しい情報を入力したらホームへリダイレクトしフラッシュメッセージが表示される" do
       click_button '送信'
       expect(current_path).to eq root_path
-      expect(page).to have_content "ログインに成功しました"
+      expect(page).to have_content "ログインしました"
     end
     it "emailがないと422とエラーメッセージ" do
       fill_in 'user[email]', with: ""
@@ -185,7 +185,7 @@ RSpec.describe "Users", type: :system do
     it "正しい情報を入力したらユーザーページへリダイレクトしフラッシュメッセージが表示される" do
       click_button '送信'
       expect(current_path).to eq users_show_path
-      expect(page).to have_content "アカウント情報の更新が完了しました"
+      expect(page).to have_content "アカウント情報が更新されました。"
       user.reload
       expect(user.name).to eq "test_user"
       expect(user.email).to eq "update-example@example.com"
@@ -195,7 +195,7 @@ RSpec.describe "Users", type: :system do
       fill_in 'user[password_confirmation]', with: ""
       click_button '送信'
       expect(current_path).to eq users_show_path
-      expect(page).to have_content "アカウント情報の更新が完了しました"
+      expect(page).to have_content "アカウント情報が更新されました"
     end
     it "emailがないと422とエラーメッセージ" do
       fill_in 'user[email]', with: ""
@@ -229,7 +229,7 @@ RSpec.describe "Users", type: :system do
       fill_in 'user[email]', with: "update-example@example.com"
       fill_in 'user[password]', with: "222222"
       click_button '送信'
-      expect(page).to have_content "ログインに成功しました"
+      expect(page).to have_content "ログインしました"
       expect(current_path).to eq root_path
     end
     it "nameを未入力だと表示されなくなる" do

@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  require 'bcrypt'
   validates :phone, presence: true, uniqueness: true
   #attr_accessor :activation_token
   #before_create :create_activation_digest

@@ -1,3 +1,12 @@
+<%= provide(:title, "アカウント有効化")%>
 <h1>アカウント有効化</h1>
-<%= link_to "メールアドレスを検証", '#' %>
-<%= link_to "電話番号を検証", edit_account_activation_path(id: current_user.id) %>
+<% if false %>
+  <p class="activated">メールアドレスは有効化済みです。</p>
+<% else %>
+  <%= link_to "メールアドレスを検証", '#' %>
+<% end %>
+<% if current_user.activated == true %>
+  <p class="activated">電話番号は有効化済みです。</p>
+<% else %>
+  <%= link_to "電話番号を検証", edit_account_activation_path(current_user) %>
+<% end %>

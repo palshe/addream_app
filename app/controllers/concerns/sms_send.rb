@@ -29,3 +29,4 @@ module SmsSend
     end
   end
 end
+#Twilio.send_sms(resource.phone, edit_account_activation_url(resource.activation_token, email: resource.email))
