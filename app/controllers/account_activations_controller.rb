@@ -1,6 +1,7 @@
 class AccountActivationsController < ApplicationController
   before_action :authenticate_user!
   before_action :activated_user
+  before_action :check_expiration, only: [:update]
   include SmsSend
 
   def edit
@@ -22,7 +23,6 @@ class AccountActivationsController < ApplicationController
 
   def update
     if @user = User.find(params[:id])
-      check_expiration
       if @user.activation_authenticate(params[:account_activation][:activation_number])
         @user.activate
         flash[:success] = "携帯番号の検証が完了しました。"
@@ -38,7 +38,7 @@ class AccountActivationsController < ApplicationController
   end
 
   def check_expiration
-    if @user.activation_digest_expired?
+    if current_user.activation_digest_expired?
       flash[:danger] = "コードの期限が切れています。もう一度お試しください。"
       redirect_to users_activation_path
     end

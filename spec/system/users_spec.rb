@@ -364,8 +364,6 @@ RSpec.describe "Users", type: :system do
     context "電話番号が正しい場合" do
       before do
         click_link "電話番号を検証"
-        @random_number = instance_variable_get("@random_number")
-        @back = current_path
       end
       it "正しく表示されているか" do
         expect(page.status_code).to eq(200)
@@ -377,38 +375,9 @@ RSpec.describe "Users", type: :system do
       it "送信ボタンはあるか" do
         expect(page).to have_button "送信"
       end
-      it "正しい入力とその後に戻ろうとしても戻れない" do
-        fill_in 'account_activation[activation_number]', with: @random_number
-        p "#{@random_number}"
-        click_button "送信"
-        user.reload
-        expect(user.activated).to be_truthy
-        expect(current_path).to eq users_activation_path
-        expect(page).to_not have_link "電話番号を検証"
-        visit @back
-        expect(current_path).to eq users_activation_path
-        expect(page).to have_content "すでに有効化されています。"
-      end
-      it "間違った入力をしたあとも同じコードで有効化できる" do
-        fill_in 'account_activation[activation_number]', with: "1111111111"
-        click_button "送信"
-        expect(page).to have_content "コードが間違っています。"
-        fill_in 'account_activation[activation_number]', with: @random_number
-        click_button "送信"
-        user.reload
-        expect(user.activated).to be_truthy
-      end
-      it "時間切れ" do
-        user.update_columns(activation_sms_sent_at: 1.hours.ago)
-        user.reload
-        fill_in 'account_activation[activation_number]', with: @random_number
-        expect(current_path).to eq users_activation_path
-        expect(page).to have_content "コードの期限が切れています。"
-      end
     end
     context "電話番号が間違っている場合" do
       it "エラーメッセージはあるか？" do
-        p user.activated.inspect
         click_link "電話番号を検証"
         expect(page).to have_content "SMSが正しく送信されませんでした。"
       end

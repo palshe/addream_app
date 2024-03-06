@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :user do
+    id {1}
     name { Faker::Lorem.characters(number: 6)}
     email {"example@example.com"}
     phone {"1111111111"}
