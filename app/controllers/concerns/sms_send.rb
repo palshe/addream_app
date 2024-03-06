@@ -6,17 +6,29 @@ module SmsSend
     require 'twilio-ruby'
     class << self
       def client
-        @client ||= ::Twilio::REST::Client.new('', '')
-        #ホントはENV['ACCOUNT_SID'], ENV['AUTH_TOKEN']
+        if Rails.env.production?
+          @client ||= ::Twilio::REST::Client.new(ENV['ACCOUNT_SID'], ENV['AUTH_TOKEN']) #本番環境用
+        else
+          @client ||= ::Twilio::REST::Client.new('', '') #開発環境、テスト環境用
+        end
       end
+      
       def send_sms(to, code)
         formatted_number = PhonyRails.normalize_number( to , country_code: 'JP') 
         begin
-          client.api.account.messages.create(
-            from: '', #ホントはENV['PHONE_NUMBER']
+          if Rails.env.production?
+            client.api.account.messages.create(
+            from: ENV['PHONE_NUMBER'],
             to: formatted_number,
             body: "認証コード: #{code}"
-          )
+            ) #本番環境用
+          else
+            client.api.account.messages.create(
+            from: '',
+            to: formatted_number,
+            body: "認証コード: #{code}"
+            ) #開発環境、テスト環境用
+          end
           @true
         rescue ::Twilio::REST::RestError => e
           @message = "#{e.message}, SMSが正しく送信されませんでした。電話番号をご確認の上、ヘッダーのリンクから再度アカウント有効化を行ってください。"

@@ -9,12 +9,22 @@ class AccountActivationsController < ApplicationController
       @random_number = Twilio.random_number_generator(10)
       digest = User.digest(@random_number)
       @message = Twilio.send_sms(@user.phone, @random_number)
-      if !@message.nil?
-        flash.now[:danger] = @message
-        #redirect_to users_activation_path
+      if Rails.env.production? #本番環境用
+        if !@message.nil?
+          flash.now[:danger] = @message
+          redirect_to users_activation_path
+        else
+        @user.update_columns(activation_digest: digest, activation_sms_sent_at: Time.now)
+        render 'edit'
+        end
+      else #開発環境、テスト環境用
+        if !@message.nil?
+          flash.now[:danger] = @message
+          #redirect_to users_activation_path
+        end
+        @user.update_columns(activation_digest: digest, activation_sms_sent_at: Time.now)
+        render 'edit'
       end
-      @user.update_columns(activation_digest: digest, activation_sms_sent_at: Time.now)
-      render 'edit'
     else
       flash[:danger] = "ログインしてください。"
       redirect_to new_user_registration_path
