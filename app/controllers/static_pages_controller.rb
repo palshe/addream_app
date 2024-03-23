@@ -9,6 +9,12 @@ class StaticPagesController < ApplicationController
   def help
   end
 
+  def rules
+  end
+
+  def privacypolicy
+  end
+
   def passwordreset
   end
 
