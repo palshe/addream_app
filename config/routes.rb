@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get '/help' , to: 'static_pages#help'
   get '/rules', to: 'static_pages#rules'
   get '/privacypolicy', to: 'static_pages#privacypolicy'
-  resources :account_activations, only: [:edit, :update]
+  resources :account_activations, only: [:new, :edit, :update]
   devise_scope :user do
     get '/users', to: 'static_pages#home'
   end

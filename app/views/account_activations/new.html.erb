@@ -1,0 +1,11 @@
+<% provide(:title, "携帯番号の登録") %>
+
+<%= form_with(url: edit_account_activation_path(@user), scope: :activation,  method: :get, local: true) do |f| %>
+
+  <%= f.label :tel, "電話番号" %>
+  <%= f.text_field :tel, class: "form-control" %>
+  
+  <%= f.submit "送信", class: "btn btn-primary" %>
+<% end %>
+
+<%= link_to "有効化画面に戻る", users_activation_path %>

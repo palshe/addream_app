@@ -8,7 +8,7 @@
 <% if current_user.activated == true %>
   <p class="activated">電話番号は有効化済みです。</p>
 <% else %>
-  <%= link_to "電話番号を検証", edit_account_activation_path(current_user) %>
+  <%= link_to "電話番号の追加と有効化", new_account_activation_path %>
 <% end %><br/>
 
 <%= link_to "ホームに戻る", root_path %>

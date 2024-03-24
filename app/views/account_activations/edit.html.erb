@@ -1,4 +1,12 @@
 <%= provide(:title, "携帯番号の検証") %>
+<p>
+  入力された電話番号にSMSを送信しました。SMSが届かない場合、
+  電話番号が間違っているか、すでに登録されている番号である可能性があります。
+  詳しくは<%= link_to "こちら", help_path %>。
+</p>
+<p>
+  入力された電話番号にSMSが届くまで、少し時間がかかる場合があります。
+</p>
 <%= @random_number if Rails.env.development? || Rails.env.test?%>
 <%= @user.activation_sms_sent_at if Rails.env.development? || Rails.env.test?%>
 <%= form_with(url: account_activation_path(current_user), scope: :account_activation, method: :patch, local: true) do |f| %>

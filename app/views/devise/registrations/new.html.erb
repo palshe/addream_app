@@ -15,11 +15,6 @@
   </div>
 
   <div class="field">
-    <%= f.label :phone, "電話番号" %><span>(ハイフン無し)</span><br />
-    <%= f.text_field :phone, autocomplete: "phone" %>
-  </div>
-
-  <div class="field">
     <%= f.label :password, "パスワード" %>
     <% if @minimum_password_length %>
     <span> (<%= @minimum_password_length %>文字以上)</span>

@@ -31,7 +31,7 @@ module SmsSend
           end
           @true
         rescue ::Twilio::REST::RestError => e
-          @message = "#{e.message}, SMSが正しく送信されませんでした。電話番号をご確認の上、ヘッダーのリンクから再度アカウント有効化を行ってください。"
+          @message = "#{e.message}"
 
         end
       end
