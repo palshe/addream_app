@@ -14,6 +14,12 @@
         メールアドレス<br/>
         <%= @user.email%>
       </h2>
+      <% if !@user.phone.nil?%>
+        <h2>
+          電話番号<br/>
+          <%= @user.phone %>
+        </h2>
+      <% end %>
       <%= link_to "変更する", edit_user_registration_path, class: "btn btn-lg btn-primary"%>
       <%= link_to "ホームに戻る", root_path%>
     </section>

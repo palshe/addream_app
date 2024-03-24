@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   require 'bcrypt'
-  validates :phone, presence:true, uniqueness:true
+  validates :phone, uniqueness: true, allow_nil: true
   #attr_accessor :activation_token
   #before_create :create_activation_digest
   # Include default devise modules. Others available are:
@@ -27,7 +27,7 @@ class User < ApplicationRecord
   end
 
   def activate
-    update_columns(activation_digest: nil, activated: true, activated_at: Time.now)
+    update_columns(activation_digest: nil, activated: true, activated_at: Time.zone.now)
   end
 
   def activation_digest_expired?
