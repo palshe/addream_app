@@ -17,7 +17,12 @@ module SampleApp
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    config.time_zone = "Tokyo"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    #暗号化
+    #config.active_record.encryption.add_to_filter_parameter = false
+    config.active_record.encryption.support_unencrypted_data = true
+
   end
 end

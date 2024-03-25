@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   require 'bcrypt'
   validates :phone, uniqueness: true, allow_nil: true
+  encrypts :phone, deterministic: true
+  encrypts :email, deterministic: true, downcase: true
   #attr_accessor :activation_token
   #before_create :create_activation_digest
   # Include default devise modules. Others available are:
