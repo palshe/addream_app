@@ -38,10 +38,6 @@ RSpec.describe User, type: :model do
       user.email = nil
       expect(user).to_not be_valid
     end
-    it "phoneがnil" do
-      user.phone = nil
-      expect(user).to_not be_valid
-    end
   end
 end
 

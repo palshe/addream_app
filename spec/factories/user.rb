@@ -3,11 +3,11 @@ FactoryBot.define do
     id {1}
     name { Faker::Lorem.characters(number: 6)}
     email {"example@example.com"}
-    phone {"1111111111"}
+    phone {nil}
     password {"111111"}
     password_confirmation {"111111"}
-    created_at {Time.now}
+    created_at {Time.zone.now}
     activated {true}
-    activated_at {Time.now}
+    activated_at {Time.zone.now}
   end
 end
