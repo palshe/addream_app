@@ -23,6 +23,10 @@ module SampleApp
     #暗号化
     #config.active_record.encryption.add_to_filter_parameter = false
     config.active_record.encryption.support_unencrypted_data = true
-
+    if Rails.env.produntion?
+      config.active_record.encryption.primary_key = ENV['ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY']
+      config.active_record.encryption.deterministic_key = ENV['ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY']
+      config.active_record.encryption.key_derivation_salt = ENV['ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT']
+    end
   end
 end
