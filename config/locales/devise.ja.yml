@@ -30,7 +30,7 @@ ja:
       success: "Successfully authenticated from %{kind} account."
     passwords:
       no_token: "このページはパスワード再設定メールからアクセスした場合のみ有効です。このURLから手続きが行えない場合、URLの有効期限が切れている可能性があります。ログインページからもう一度手続きを行ってください。"
-      send_instructions: ""
+      send_instructions: "パスワード再設定のメールを送信しました。メールをご確認ください。"
       send_paranoid_instructions: "あなたのメールアドレスが当サービスに登録されている場合、このメールアドレス宛にパスワード復旧リンクが送信されました。"
       updated: "パスワードの変更が完了しました。ログインしました。"
       updated_not_active: "パスワードの変更が完了しました。"

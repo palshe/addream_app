@@ -14,11 +14,4 @@ class StaticPagesController < ApplicationController
 
   def privacypolicy
   end
-
-  def passwordreset
-  end
-
-  def activation
-  end
-
 end

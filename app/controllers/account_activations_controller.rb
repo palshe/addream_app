@@ -37,28 +37,28 @@ class AccountActivationsController < ApplicationController
         @user.activate
         @user.update!(phone: params[:account_activation][:user_tel], )
         flash[:success] = "携帯番号の設定と検証が完了しました。"
-        redirect_to users_activation_path
+        redirect_to root_path
       else
-        flash.now[:danger] = "コードが間違っているか、コードの期限が切れています。もう一度お試しください。"
+        flash.now[:notice] = "コードが間違っているか、コードの期限が切れています。もう一度お試しください。"
         render 'edit', status: :unprocessable_entity
       end
     else
-      flash[:danger] = "ログインしてください。"
+      flash[:notice] = "ログインしてください。"
       redirect_to new_user_registration_path
     end
   end
 
   def check_expiration
     if current_user.activation_digest_expired?
-      flash[:danger] = "コードが間違っているか、コードの期限が切れています。もう一度お試しください。"
+      flash[:notice] = "コードが間違っているか、コードの期限が切れています。もう一度お試しください。"
       render 'edit', status: :unprocessable_entity and return
     end
   end
 
   def activated_user
     if current_user.activated
-      flash[:success] = "すでに携帯番号は検証されています。"
-      redirect_to users_activation_path
+      flash[:notice] = "すでに有効化されています。"
+      redirect_to root_path
     end
   end
 
