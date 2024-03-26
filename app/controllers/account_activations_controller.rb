@@ -17,7 +17,7 @@ class AccountActivationsController < ApplicationController
       if Rails.env.production? #本番環境用
         if !@message.nil?
         else
-        @user.update_columns(activation_digest: digest, activation_sms_sent_at: Time.now)
+        @user.update_columns(activation_digest: digest, activation_sms_sent_at: Time.zone.now)
         end
       else #開発環境、テスト環境用
         if !@message.nil?
@@ -39,7 +39,7 @@ class AccountActivationsController < ApplicationController
         flash[:success] = "携帯番号の設定と検証が完了しました。"
         redirect_to users_activation_path
       else
-        flash.now[:danger] = "コードが間違っています。送信されたSMSを確認してください。"
+        flash.now[:danger] = "コードが間違っているか、コードの期限が切れています。もう一度お試しください。"
         render 'edit', status: :unprocessable_entity
       end
     else
@@ -50,14 +50,14 @@ class AccountActivationsController < ApplicationController
 
   def check_expiration
     if current_user.activation_digest_expired?
-      flash[:danger] = "コードの期限が切れています。もう一度お試しください。"
-      redirect_to users_activation_path
+      flash[:danger] = "コードが間違っているか、コードの期限が切れています。もう一度お試しください。"
+      render 'edit', status: :unprocessable_entity and return
     end
   end
 
   def activated_user
     if current_user.activated
-      flash[:success] = "すでに有効化されています。"
+      flash[:success] = "すでに携帯番号は検証されています。"
       redirect_to users_activation_path
     end
   end
