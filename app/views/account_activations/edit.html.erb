@@ -8,7 +8,7 @@
   入力された電話番号にSMSが届くまで、少し時間がかかる場合があります。
 </p>
 <%= @random_number if Rails.env.development? || Rails.env.test?%>
-<%= @user.activation_sms_sent_at if Rails.env.development? || Rails.env.test?%>
+<%= current_user.activation_sms_sent_at if Rails.env.development? || Rails.env.test?%>
 <%= form_with(url: account_activation_path(current_user), scope: :account_activation, method: :patch, local: true) do |f| %>
   <%= f.hidden_field :user_tel, value: @tel %>
   <%= f.label :activation_number, "10ケタの数字" %>

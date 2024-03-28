@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "SessionsController", type: :request do
-  let(:user){ create(:user, confirmation_sent_at: Time.zone.now, confirmed_at: Time.zone.now) }
+  let(:user){ create(:user) }
   describe "new" do
     it "正しく表示されるか" do
       get new_user_session_path
@@ -39,5 +39,4 @@ RSpec.describe "SessionsController", type: :request do
       expect(response.body).to include "ログアウトしました"
     end
   end
-
 end

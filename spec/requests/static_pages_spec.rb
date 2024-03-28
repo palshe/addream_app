@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "StaticPagesControllerとView", type: :request do
   describe "home" do
-    let(:user){ create(:user, confirmation_sent_at: Time.zone.now, confirmed_at: Time.zone.now) }
+    let(:user){ create(:user) }
     it "ログインしていない状態で正しく表示されるか" do
       get root_path
       expect(response).to have_http_status(200)
